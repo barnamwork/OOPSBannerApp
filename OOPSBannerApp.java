@@ -1,137 +1,93 @@
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * OOPSBannerApp
  *
- * UC7: Renders "OOPS" banner using a CharacterPatternMap
- * inner static class to encapsulate character patterns.
+ * UC8: Renders "OOPS" banner using HashMap for
+ * character pattern storage and a rendering function.
  *
  * @author Barnam
- * @version 7.0
+ * @version 8.0
  */
 public class OOPSBannerApp {
-
-    /**
-     * Static Inner Class to encapsulate a character
-     * and its corresponding banner pattern.
-     */
-    public static class CharacterPatternMap {
-
-        private final char character;
-        private final String[] pattern;
-
-        /**
-         * Constructor to initialize character and pattern.
-         *
-         * @param character the character (O, P, S)
-         * @param pattern   the 7-line banner pattern
-         */
-        public CharacterPatternMap(char character, String[] pattern) {
-            this.character = character;
-            this.pattern = pattern;
-        }
-
-        /**
-         * Returns the character.
-         *
-         * @return character
-         */
-        public char getCharacter() {
-            return character;
-        }
-
-        /**
-         * Returns the banner pattern.
-         *
-         * @return String array representing banner lines
-         */
-        public String[] getPattern() {
-            return pattern;
-        }
-    }
 
     /* ================= Utility Static Methods ================= */
 
     /**
-     * Returns all supported character patterns.
+     * Builds and returns a map of character patterns.
      *
-     * @return array of CharacterPatternMap objects
+     * @return Map of character to its banner pattern
      */
-    private static CharacterPatternMap[] getCharacterPatterns() {
-        return new CharacterPatternMap[]{
-                new CharacterPatternMap('O', new String[]{
-                        "********",
-                        "*      *",
-                        "*      *",
-                        "*      *",
-                        "*      *",
-                        "*      *",
-                        "********"
-                }),
-                new CharacterPatternMap('P', new String[]{
-                        "********",
-                        "*      *",
-                        "*      *",
-                        "********",
-                        "*       ",
-                        "*       ",
-                        "*       "
-                }),
-                new CharacterPatternMap('S', new String[]{
-                        "********",
-                        "*       ",
-                        "*       ",
-                        "********",
-                        "       *",
-                        "       *",
-                        "********"
-                })
-        };
+    private static Map<Character, String[]> buildCharacterPatternMap() {
+
+        Map<Character, String[]> patternMap = new HashMap<>();
+
+        patternMap.put('O', new String[]{
+                "********",
+                "*      *",
+                "*      *",
+                "*      *",
+                "*      *",
+                "*      *",
+                "********"
+        });
+
+        patternMap.put('P', new String[]{
+                "********",
+                "*      *",
+                "*      *",
+                "********",
+                "*       ",
+                "*       ",
+                "*       "
+        });
+
+        patternMap.put('S', new String[]{
+                "********",
+                "*       ",
+                "*       ",
+                "********",
+                "       *",
+                "       *",
+                "********"
+        });
+
+        return patternMap;
     }
 
     /**
-     * Retrieves the banner pattern for a given character.
+     * Renders a banner message using stored character patterns.
      *
-     * @param ch character to lookup
-     * @return banner pattern for the character
+     * @param message    the word to render
+     * @param patternMap map containing character patterns
      */
-    private static String[] getPatternForCharacter(char ch) {
-        for (CharacterPatternMap map : getCharacterPatterns()) {
-            if (map.getCharacter() == ch) {
-                return map.getPattern();
+    private static void renderBanner(String message,
+                                     Map<Character, String[]> patternMap) {
+
+        // Each banner is 7 lines tall
+        for (int row = 0; row < 7; row++) {
+
+            StringBuilder lineBuilder = new StringBuilder();
+
+            for (char ch : message.toCharArray()) {
+                String[] pattern = patternMap.get(ch);
+                lineBuilder.append(pattern[row]).append(" ");
             }
+
+            System.out.println(lineBuilder.toString().trim());
         }
-        return null;
     }
 
     /* ================= Main Method ================= */
 
     public static void main(String[] args) {
 
-        String word = "OOPS";
-        String[] bannerLines = new String[7];
+        String message = "OOPS";
 
-        // Initialize StringBuilder for each banner row
-        StringBuilder[] builders = new StringBuilder[7];
-        for (int i = 0; i < 7; i++) {
-            builders[i] = new StringBuilder();
-        }
+        Map<Character, String[]> characterPatterns =
+                buildCharacterPatternMap();
 
-        // Build banner row by row
-        for (char ch : word.toCharArray()) {
-            String[] pattern = getPatternForCharacter(ch);
-
-            for (int i = 0; i < 7; i++) {
-                builders[i].append(pattern[i]).append(" ");
-            }
-        }
-
-        // Convert StringBuilders to final banner lines
-        for (int i = 0; i < 7; i++) {
-            bannerLines[i] = builders[i].toString().trim();
-        }
-
-        // Print banner
-        for (String line : bannerLines) {
-            System.out.println(line);
-        }
+        renderBanner(message, characterPatterns);
     }
 }
